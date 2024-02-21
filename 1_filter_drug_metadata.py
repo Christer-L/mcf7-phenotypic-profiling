@@ -2,6 +2,28 @@ import argparse
 import pandas as pd
 import os
 import pickle
+import numpy as np
+
+from tqdm import tqdm
+
+
+def create_batches(paths, num_batches):
+    return np.array_split(paths, num_batches)
+
+
+def save_batch_paths(batch_df, save_path, n_batch):
+    paths = []
+    path_table = batch_df[["Image_FileName_DAPI", "Image_PathName_DAPI"]]
+
+    for i, row in path_table.iterrows():
+        directory = row["Image_PathName_DAPI"].split("/")[1]    # Remove Week# from the beginning of the path
+        file_name = row["Image_FileName_DAPI"][:-4]
+        dapi_path = os.path.join(directory, file_name)
+        print(dapi_path)
+        paths.append(dapi_path)
+
+    with open(os.path.join(save_path, 'filtered_drugs_dapi_dirs_batch_{}.pkl'.format(n_batch)), 'wb') as f:
+        pickle.dump(paths, f)
 
 
 def filter_drugs(druglist_file, moa_file, metadata_file, save_path):
@@ -41,6 +63,12 @@ def filter_drugs(druglist_file, moa_file, metadata_file, save_path):
     os.makedirs(table_path, exist_ok=True)
     filtered_metadata_table.to_csv(os.path.join(table_path, "metadata.csv"), index=False)
 
+    # Save image batches
+    batch_path = os.path.join(save_path, "structured", "metadata", "batches")
+    os.makedirs(batch_path, exist_ok=True)
+    for i, batch in tqdm(enumerate(create_batches(filtered_metadata_table, 4))):
+        save_batch_paths(batch, batch_path, i)
+
 
 def get_dapi_paths(metadata_file, save_path):
     paths = []
@@ -79,9 +107,9 @@ def main():
 
 
 if __name__ == '__main__':
-    # filter_drugs("/home/christer/Datasets/MCF7/metadata/filtered_drugs.txt",
-    #              "/home/christer/Datasets/MCF7/metadata/BBBC021_v1_moa.csv",
-    #              "/home/christer/Datasets/MCF7/metadata/BBBC021_v1_image.csv",
-    #              "/home/christer/Datasets/MCF7/")
-    get_dapi_paths("/home/christer/Datasets/MCF7/metadata/BBBC021_v1_image.csv",
-                   "/home/christer/Datasets/MCF7/")
+    filter_drugs("/home/christer/Datasets/MCF7/metadata/filtered_drugs.txt",
+                 "/home/christer/Datasets/MCF7/metadata/BBBC021_v1_moa.csv",
+                 "/home/christer/Datasets/MCF7/metadata/BBBC021_v1_image.csv",
+                 "/home/christer/Datasets/MCF7/")
+    # get_dapi_paths("/home/christer/Datasets/MCF7/metadata/BBBC021_v1_image.csv",
+    #                "/home/christer/Datasets/MCF7/")
