@@ -121,10 +121,9 @@ def main():
                         default="/home/christer/Datasets/MCF7/structured/extracted_cells/"
                         )
     parser.add_argument("--out_dir", type=str, help="output directory for profiles",
-                        nargs='?', default="/home/christer/Datasets/MCF7/structured/MEVAE_data")
+                        nargs='?', default="/home/christer/Datasets/MCF7/structured/MEVAE_data_drugs")
     parser.add_argument("--gaussian", type=str, help="Gaussian kernel sigma used in segmentation",
                         nargs='?', default="3")
-
 
     args = parser.parse_args()
 
@@ -150,9 +149,6 @@ def main():
         # Optional: use tqdm to show progress
         for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
             pass
-
-
-
 
 
 # def main():

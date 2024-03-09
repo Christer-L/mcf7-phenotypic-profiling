@@ -4,6 +4,8 @@ import os
 import pickle
 import numpy as np
 
+from collections import OrderedDict
+
 from tqdm import tqdm
 
 
@@ -24,6 +26,26 @@ def save_batch_paths(batch_df, save_path, n_batch):
 
     with open(os.path.join(save_path, 'filtered_drugs_dapi_dirs_batch_{}.pkl'.format(n_batch)), 'wb') as f:
         pickle.dump(paths, f)
+
+
+def get_high_dose_paths(df_filtered):
+    dfs = []
+    for drug in list(OrderedDict.fromkeys(df_filtered['Image_Metadata_Compound'])):
+        if drug == "DMSO":
+            continue
+        doses = df_filtered[df_filtered['Image_Metadata_Compound'] == drug]["Image_Metadata_Concentration"].tolist()
+        last_doses = list(OrderedDict.fromkeys(doses))[-2:]
+        dfs.append(df_filtered[(df_filtered['Image_Metadata_Compound'] == drug) &
+                               (df_filtered['Image_Metadata_Concentration'].isin(last_doses))])
+        print("hi")
+    dose_filtered_df = pd.concat(dfs)
+
+    # TODO: Get only wellplates of dmso that have corresponding drugs
+    wellplates = list(OrderedDict.fromkeys(dose_filtered_df["Image_Metadata_Plate_DAPI"]))
+
+    dmso_dose_filtered_df = df_filtered[(df_filtered['Image_Metadata_Compound'] == "DMSO") &
+                                        (df_filtered["Image_Metadata_Plate_DAPI"].isin(wellplates))].reset_index(drop=True)
+    return pd.concat([dmso_dose_filtered_df, dose_filtered_df])
 
 
 def filter_drugs(druglist_file, moa_file, metadata_file, save_path):
@@ -62,11 +84,12 @@ def filter_drugs(druglist_file, moa_file, metadata_file, save_path):
     table_path = os.path.join(save_path, "structured", "metadata")
     os.makedirs(table_path, exist_ok=True)
     filtered_metadata_table.to_csv(os.path.join(table_path, "metadata.csv"), index=False)
+    filtered_metadata_table = get_high_dose_paths(filtered_metadata_table)
 
     # Save image batches
     batch_path = os.path.join(save_path, "structured", "metadata", "batches")
     os.makedirs(batch_path, exist_ok=True)
-    for i, batch in tqdm(enumerate(create_batches(filtered_metadata_table, 4))):
+    for i, batch in tqdm(enumerate(create_batches(filtered_metadata_table.reset_index(), 1))):
         save_batch_paths(batch, batch_path, i)
 
 

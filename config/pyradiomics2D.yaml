@@ -56,7 +56,7 @@ setting:
   # feature calculation, this confounding effect may be reduced. However, if only one specific scanner is used, or the
   # images reflect some absolute world value (e.g. ADC maps, T2maps (NOT T2 weighted)), consider disabling the
   # normalization.
-  normalize: true
+  normalize: false
   #normalizeScale: 100  # This allows you to use more or less the same bin width.
 
   # Resampling:

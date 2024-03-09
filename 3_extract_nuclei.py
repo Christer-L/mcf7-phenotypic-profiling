@@ -172,7 +172,7 @@ def check_mass_center(mask):
     return is_centered
 
 
-def extract_cells(img_path, segmentation_path, img_out_dir, seg_out_dir, device,
+def extract_cells(img_path, segmentation_path, img_out_dir, seg_out_dir, device="cpu",
                   dim=128,
                   normalize_image=True):
     if dim % 2 != 0:

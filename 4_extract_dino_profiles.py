@@ -38,15 +38,11 @@ def main():
                                 "/filtered_drugs_dapi_dirs_batch_0.pkl")
     parser.add_argument("--image_dir", type=str, help="extracted_cells image dir",
                         nargs='?',
-                        #default="/home/christer/Datasets/MCF7/structured/extracted_cells/images"
-                        default="/home/clohk/datasets/mcf7/extracted_cells"
+                        default="/home/christer/Datasets/MCF7/structured/extracted_cells/images"
                         )
     parser.add_argument("--gpu_id", type=str, help="GPU ID", nargs='?', default="7")
     parser.add_argument("--out_dir", type=str, help="output directory for profiles",
-                        nargs='?',
-                        #default="/home/christer/Datasets/MCF7/structured/profiles/dino"
-                        default="/home/clohk/datasets/mcf7/profiles"
-                        )
+                        nargs='?', default="/home/christer/Datasets/MCF7/structured/profiles/dino")
     parser.add_argument("--gaussian", type=str, help="Gaussian kernel sigma used in segmentation",
                         nargs='?', default="3")
 

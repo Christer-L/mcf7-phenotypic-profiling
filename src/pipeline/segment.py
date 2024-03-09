@@ -41,7 +41,7 @@ def segment(path_list, gpu_id, kernel_size, data_dir, out_dir):
 
     for path in paths:
         directory = str(path.split('/')[0])
-        img_path = os.path.join(data_dir, str(path))
+        img_path = os.path.join(data_dir, str(path) + ".tif")
         img = tifffile.imread(img_path)
 
         # In OpenCV, if you set sigma to 0, it calculates an appropriate sigma based on the kernel size,
@@ -68,7 +68,7 @@ def main():
     parser.add_argument("--gpu_id", type=str, help="GPU ID")
     parser.add_argument("--kernel_size", type=str, help="Gaussian Kernel Size")
 
-    parser.add_argument("--out_dir", type=str, help="Segmentation directory", 
+    parser.add_argument("--out_dir", type=str, help="Segmentation directory",
             nargs='?', default="/mnt/cbib/image_datasets/christer_datasets/mcf7/segmentations")
 
     # Parse arguments
@@ -78,6 +78,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()    
-
-
+    main()
