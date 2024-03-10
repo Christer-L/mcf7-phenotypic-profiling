@@ -110,7 +110,7 @@ def main():
     # Add arguments
     parser.add_argument("--pathnames", type=str, help="Pickle file with metadata",
                         nargs='?',
-                        default="/mnt/cbib/image_datasets/christer_datasets/mcf7_paper/paths")
+                        default="/mnt/cbib/image_datasets/christer_datasets/mcf7_paper/fixed_paths/batch_0.pkl")
     parser.add_argument("--cells_dir", type=str, help="extracted_cells image dir",
                         nargs='?',
                         default="home/clohk/mcf7_paper/structured/extracted_cells")
