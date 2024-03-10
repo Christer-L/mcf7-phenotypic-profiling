@@ -67,6 +67,8 @@ def main():
             for path in batch_paths:
                 paths.append(path)
 
+    print(len(paths))
+
     task_args = []
     for dir_path in paths:
         task_args.append((dir_path, extractor, args.gaussian, args.out_dir))
