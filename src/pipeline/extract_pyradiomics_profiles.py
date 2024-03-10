@@ -46,7 +46,7 @@ def main():
     # Add arguments
     parser.add_argument("--batch_dir", type=str, help="Directory with pickle files",
                         nargs='?',
-                        default="/home/christer/Datasets/MCF7/structured/metadata/batches")
+                        default="/mnt/cbib/image_datasets/christer_datasets/mcf7_paper/fixed_paths")
     parser.add_argument("--extracted_cells_dir", type=str, help="extracted_cells dir",
                         nargs='?',
                         default="/home/clohk/mcf7_paper/structured/extracted_cells")
