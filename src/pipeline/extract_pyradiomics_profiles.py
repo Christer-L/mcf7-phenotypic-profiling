@@ -78,3 +78,6 @@ def main():
         for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
             pass
 
+
+if __name__ == '__main__':
+    main()
