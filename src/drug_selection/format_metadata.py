@@ -77,7 +77,7 @@ def main():
     for idx_split, split in enumerate(splits):
         save_path = os.path.join(path_save_dir, "batch_{}.pkl".format(idx_split))
         with open(save_path, 'wb') as f:
-            pickle.dump(paths, f)
+            pickle.dump(split, f)
 
     filtered_table.to_csv(os.path.join(args.save_path, "filtered_metadata.csv"))
 
