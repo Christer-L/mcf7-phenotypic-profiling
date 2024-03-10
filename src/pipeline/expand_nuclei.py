@@ -4,14 +4,10 @@ from tqdm import tqdm
 import os
 import pickle
 from glob import glob
-import shutil
 
 import numpy as np
 import SimpleITK as sitk
 from skimage import draw
-from skimage.transform import resize
-import matplotlib.pyplot as plt
-from PIL import Image
 from concurrent.futures import ProcessPoolExecutor
 import concurrent
 
