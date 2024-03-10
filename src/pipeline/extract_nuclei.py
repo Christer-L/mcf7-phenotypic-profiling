@@ -153,7 +153,8 @@ def main():
     parser.add_argument("--segmentations_dir", type=str, help="Segmentations directory path",
                         nargs='?', default="/mnt/cbib/christers_data/mcf7/segmentations/gaussian_3")
     parser.add_argument("--out_dir", type=str, help="output directory",
-                        nargs='?', default="/home/clohk/mcf7_paper/structured/extracted_cells")
+                        nargs='?',
+                        default="/mnt/cbib/image_datasets/christer_datasets/mcf7_paper/structured/extracted_cells")
 
     # Parse arguments
     args = parser.parse_args()
