@@ -34,8 +34,7 @@ def main():
     # Add arguments
     parser.add_argument("--pathnames", type=str, help="Pickle file with metadata",
                         nargs='?',
-                        default="/home/christer/Datasets/MCF7/structured/metadata/batches"
-                                "/filtered_drugs_dapi_dirs_batch_0.pkl")
+                        default="/home/christer/Datasets/MCF7_paper/metadata/paths/batch_0.pkl")
     parser.add_argument("--image_dir", type=str, help="extracted_cells image dir",
                         nargs='?',
                         default="/home/christer/Datasets/MCF7/structured/extracted_cells/images"
@@ -61,7 +60,7 @@ def main():
         path_parts = os.path.normpath(dir_path).split(os.sep)
         columns = ["id", "normalized"] + list(range(EMBEDDING_DIM))
         rows = []
-        for condition in ["rotated_normalized_*.tif", "rotated_*.tif"]:
+        for condition in ["rotated_normalized_*.tif"]:
             for img_path in glob(os.path.join(args.image_dir, "gaussian_{}".format(args.gaussian),
                                               dir_path,
                                               "rotated_normalized_*.tif")):
