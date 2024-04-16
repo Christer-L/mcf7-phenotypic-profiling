@@ -9,6 +9,12 @@ import pickle
 
 
 def map_to_16bit(labels):
+    """
+    Map 32-bit image labels from StarDist to 16-bit values.
+
+    :param labels: The input array of labels to be mapped to 16-bit values.
+    :return: An array of 16-bit values corresponding to the input labels.
+    """
     unique_values = np.unique(labels)
 
     # Check if unique values exceed 16-bit range
@@ -25,7 +31,15 @@ def map_to_16bit(labels):
 
 
 def segment(paths, kernel_size, data_dir, out_dir):
+    """
+    Segment images using StarDist2D model and save the segmentation results.
 
+    :param paths: List of paths to the images to be segmented.
+    :param kernel_size: Size of the Gaussian kernel used for image blurring.
+    :param data_dir: Directory where the input images are located.
+    :param out_dir: Directory where the segmented images will be saved.
+    :return: None
+    """
     # creates a pretrained model
     model = StarDist2D.from_pretrained('2D_versatile_fluo')
 
@@ -66,8 +80,10 @@ def main():
     # Parse arguments
     args = parser.parse_args()
 
+    # Select GPU
     os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
 
+    # Open image paths from the input pickle file
     with open(args.path_list, 'rb') as f:
         paths = pickle.load(f)
 
