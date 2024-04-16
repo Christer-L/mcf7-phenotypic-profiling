@@ -1,11 +1,8 @@
 import os
-from glob import glob
 import tifffile
 import numpy as np
-from stardist.plot import render_label
 from stardist.models import StarDist2D
 from csbdeep.utils import normalize
-import matplotlib.pyplot as plt
 import cv2
 import argparse
 import pickle
@@ -27,11 +24,7 @@ def map_to_16bit(labels):
     return labels_16bit.astype(np.uint16)
 
 
-def segment(path_list, gpu_id, kernel_size, data_dir, out_dir):
-    os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
-
-    with open(path_list, 'rb') as f:
-        paths = pickle.load(f)
+def segment(paths, kernel_size, data_dir, out_dir):
 
     # creates a pretrained model
     model = StarDist2D.from_pretrained('2D_versatile_fluo')
@@ -60,9 +53,8 @@ def segment(path_list, gpu_id, kernel_size, data_dir, out_dir):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Segmentation")
-
     # Add arguments
+    parser = argparse.ArgumentParser(description="Segmentation")
     parser.add_argument("--path_list_file", type=str, help="Path to the pickle file with all DAPI paths",
             nargs='?', default="/home/clohk/datasets/mcf7/metadata/DAPI_paths.pkl")
     parser.add_argument("--gpu_id", type=str, help="GPU ID")
@@ -74,7 +66,12 @@ def main():
     # Parse arguments
     args = parser.parse_args()
 
-    segment(args.path_list_file, args.gpu_id, args.kernel_size, args.data_path, args.out_dir)
+    os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
+
+    with open(args.path_list, 'rb') as f:
+        paths = pickle.load(f)
+
+    segment(paths, args.kernel_size, args.data_path, args.out_dir)
 
 
 if __name__ == '__main__':
