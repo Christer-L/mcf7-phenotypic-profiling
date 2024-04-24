@@ -52,23 +52,22 @@ def format_paths(metadata_table: DataFrame) -> list:
 
 
 def main():
-    # Add arguments
+    # Arguments
     parser = argparse.ArgumentParser(description="Format image paths and metadata for drug selection")
     parser.add_argument("moa_metadata_path", type=str,
                         help=" BBBC021_v1_moa.csv file from https://bbbc.broadinstitute.org/BBBC021",
                         nargs="?",
-                        default="/scratch/homedirs/clohk/mcf7-phenotypic-profiling/data/metadata/BBBC021_v1_moa.csv")
+                        default="/mnt/cbib/christers_data/mcf7/metadata/BBBC021_v1_moa.csv")
 
     parser.add_argument("image_metadata_path", type=str,
                         help=" BBBC021_v1_image.csv file from https://bbbc.broadinstitute.org/BBBC021",
                         nargs="?",
-                        default="/scratch/homedirs/clohk/mcf7-phenotypic-profiling/data/metadata/BBBC021_v1_image.csv")
+                        default="/mnt/cbib/christers_data/mcf7/metadata/BBBC021_v1_image.csv")
 
     parser.add_argument("save_path", type=str,
                         help=" Parent directory for formatted metadata",
                         nargs="?",
-                        default="/scratch/homedirs/clohk/mcf7-phenotypic-profiling/" +
-                                "data/structured/metadata/drug_selection/")
+                        default="/mnt/cbib/christers_data/mcf7/structured/metadata/drug_selection")
 
     parser.add_argument("n_splits", type=int,
                         help="Number of splits of for downstream processing " +

@@ -67,18 +67,21 @@ def segment(paths, kernel_size, data_dir, out_dir):
 
 
 def main():
-    # Add arguments
+    # Arguments
     parser = argparse.ArgumentParser(description="Segmentation")
     parser.add_argument("--path_list_file", type=str, help="Path to the pickle file with all DAPI paths",
-            nargs='?', default="/home/clohk/datasets/mcf7/metadata/DAPI_paths.pkl")
+                        nargs='?',
+                        default="/mnt/cbib/christers_data/mcf7/structured/metadata/drug_selection/paths/batch_0.pkl")
     parser.add_argument("--gpu_id", type=str, help="GPU ID")
     parser.add_argument("--kernel_size", type=str, help="Gaussian Kernel Size")
 
     parser.add_argument("--out_dir", type=str, help="Segmentation directory",
-            nargs='?', default="/mnt/cbib/image_datasets/christer_datasets/mcf7/segmentations")
+                        nargs='?', default="/mnt/cbib/christers_data/mcf7/segmentations")
 
     # Parse arguments
     args = parser.parse_args()
+
+    print("Processing {}".format(args.path_list_file))
 
     # Select GPU
     os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
