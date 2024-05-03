@@ -11,12 +11,23 @@ from glob import glob
 from transformers import AutoImageProcessor, AutoModel
 from PIL import Image
 
+# Amount of dimensions in the DINOv2 small model
 EMBEDDING_DIM = 384
-IMAGE_TYPE = "ROTATED"  # EXPANDED if profiling expanded images
 
 
-def get_dino_embedding(processor, model, cell_img):
-    inputs = processor(images=Image.fromarray(cell_img), return_tensors="pt")
+def get_dino_embedding(processor, model, img):
+    """
+    Compute DINOv2 embeddings for a given image object.
+
+    Parameters:
+    processor (AutoImageProcessor): The image processor from the DINO model.
+    model (AutoModel): The DINO model.
+    img (np.ndarray): The image to compute embeddings for.
+
+    Returns:
+    np.ndarray: The predicted DINOv2 embeddings for the image.
+    """
+    inputs = processor(images=Image.fromarray(img), return_tensors="pt")
     outputs = model(**inputs)
     last_hidden_state = outputs.last_hidden_state
     embeddings = last_hidden_state.mean(dim=1)
@@ -24,15 +35,20 @@ def get_dino_embedding(processor, model, cell_img):
 
 
 def initialize_dino():
+    """
+    Initialize small DINOv2 model and its processor.
+
+    Returns:
+    tuple: A tuple containing the processor and the model.
+    """
     processor = AutoImageProcessor.from_pretrained('facebook/dinov2-small')
     model = AutoModel.from_pretrained('facebook/dinov2-small')
     return processor, model
 
 
 def main():
+    # Arguments
     parser = argparse.ArgumentParser(description="DINO profile extraction")
-
-    # Add arguments
     parser.add_argument("--pathnames", type=str, help="Pickle file with metadata",
                         nargs='?',
                         default="/home/christer/Datasets/MCF7_paper/metadata/paths/batch_0.pkl")
@@ -40,7 +56,7 @@ def main():
                         nargs='?',
                         default="/home/christer/Datasets/MCF7_paper/images")
     parser.add_argument("--gpu_id", type=str, help="GPU ID", nargs='?', default="7")
-    parser.add_argument("--out_dir", type=str, help="output directory for profiles",
+    parser.add_argument("--out_dir", type=str, help="output directory for ALL profiles",
                         nargs='?', default="/home/christer/Datasets/MCF7_paper/structured/profiles/dino")
     parser.add_argument("--gaussian", type=str, help="Gaussian kernel sigma used in segmentation",
                         nargs='?', default="3")
@@ -58,7 +74,7 @@ def main():
 
     for dir_path in tqdm(paths):
         path_parts = os.path.normpath(dir_path).split(os.sep)
-        columns = ["id"] + ["DINOv2_{}".format(i) for i in range(EMBEDDING_DIM)]
+        columns = ["object_id"] + ["DINOv2_{}".format(i) for i in range(EMBEDDING_DIM)]
         rows = []
 
         for img_path in glob(os.path.join(args.image_dir, "gaussian_{}".format(args.gaussian),
