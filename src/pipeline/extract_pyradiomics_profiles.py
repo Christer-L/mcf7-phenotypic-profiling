@@ -25,6 +25,7 @@ def extract_features(args):
     dir_path, extractor, gaussian, out_dir, extracted_cells_dir = args
     path_parts = os.path.normpath(dir_path).split(os.sep)
     rows = []
+    columns = None
 
     img_path = os.path.join(extracted_cells_dir, "images", "gaussian_{}".format(gaussian),
                             dir_path, "rotated_normalized.tif")
@@ -50,13 +51,14 @@ def extract_features(args):
         entry = [int(i_z)] + values
         rows.append(entry)
 
-    columns = ["object_id"] + ["Pyradiomics_{}".format(k) for k in output if not k.startswith("diagnostics")]
+    if columns is None:
+        columns = ["object_id"] + ["Pyradiomics_{}".format(k) for k in output if not k.startswith("diagnostics")]
 
     # Append the embeddings to a DataFrame
     profile_df = pd.DataFrame(rows, columns=columns)
 
     # Construct the path to the output CSV file
-    save_path = os.path.join(args.out_dir, "gaussian_{}".format(gaussian), path_parts[0])
+    save_path = os.path.join(out_dir, "gaussian_{}".format(gaussian), path_parts[0])
     os.makedirs(save_path, exist_ok=True)
     save_filepath = os.path.join(save_path, "{}.csv".format(path_parts[1]))
 
