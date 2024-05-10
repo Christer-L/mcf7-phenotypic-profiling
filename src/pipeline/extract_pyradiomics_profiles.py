@@ -60,6 +60,9 @@ def extract_features(args):
     os.makedirs(save_path, exist_ok=True)
     save_filepath = os.path.join(save_path, "{}.csv".format(path_parts[1]))
 
+    # Save the DataFrame to a CSV file
+    profile_df.to_csv(save_filepath)
+
 
 def main():
     parser = argparse.ArgumentParser(description="DINO profile extraction")
