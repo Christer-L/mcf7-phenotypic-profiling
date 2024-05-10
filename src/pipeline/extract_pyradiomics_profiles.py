@@ -98,7 +98,6 @@ def main():
     task_args = []
     for dir_path in paths:
         task_args.append((dir_path, extractor, args.gaussian, args.out_dir, args.extracted_cells_dir))
-        break
 
     with ProcessPoolExecutor() as executor:
         futures = [executor.submit(extract_features, arg) for arg in task_args]
