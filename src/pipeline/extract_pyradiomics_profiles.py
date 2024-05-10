@@ -6,9 +6,19 @@ from radiomics import featureextractor
 from glob import glob
 import tifffile
 import pandas as pd
+import numpy as np
+import SimpleITK as sitk
+
 
 from concurrent.futures import ProcessPoolExecutor
 import concurrent
+
+
+def numpy_to_itk(images):
+    """
+    Convert a list of images (or masks) from numpy to SimpleITK format.
+    """
+    return [sitk.GetImageFromArray(np.squeeze(img)) for img in images]
 
 
 def extract_features(args):
@@ -21,22 +31,34 @@ def extract_features(args):
     seg_path = os.path.join(extracted_cells_dir, "segmentations", "gaussian_{}".format(gaussian),
                             dir_path, "rotated.tif")
 
+    img_stack = tifffile.imread(img_path)
+    mask_stack = tifffile.imread(seg_path)
+    n_imgs = img_stack.shape[0]
 
-    output = extractor.execute(img_path, seg_path, label=int(1))
-    values = [
-        float(str(output[k]))
-        for k in output
-        if not k.startswith("diagnostics")
-    ]
-    entry = [int(idx)] + values
-    rows.append(entry)
+    for i_z in range(n_imgs):
+        img = img_stack[i_z]
+        mask = mask_stack[i_z]
 
-    columns = ["index"] + ["Pyradiomics_{}".format(k) for k in output if not k.startswith("diagnostics")]
+        img_itk, mask_itk = numpy_to_itk([img, mask])
+
+        output = extractor.execute(img_itk, mask_itk, label=int(255))
+        values = [
+            float(str(output[k]))
+            for k in output
+            if not k.startswith("diagnostics")
+        ]
+        entry = [int(i_z)] + values
+        rows.append(entry)
+
+    columns = ["object_id"] + ["Pyradiomics_{}".format(k) for k in output if not k.startswith("diagnostics")]
+
+    # Append the embeddings to a DataFrame
     profile_df = pd.DataFrame(rows, columns=columns)
-    save_path = os.path.join(out_dir, "gaussian_{}".format(gaussian), path_parts[0])
+
+    # Construct the path to the output CSV file
+    save_path = os.path.join(args.out_dir, "gaussian_{}".format(gaussian), path_parts[0])
     os.makedirs(save_path, exist_ok=True)
     save_filepath = os.path.join(save_path, "{}.csv".format(path_parts[1]))
-    profile_df.to_csv(save_filepath)
 
 
 def main():
