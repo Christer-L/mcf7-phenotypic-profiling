@@ -165,7 +165,7 @@ def main():
 
         task_args.append((img_path, seg_path, img_save_dir, seg_save_dir, int(slice_idx)))
 
-    with ProcessPoolExecutor(max_workers=1) as executor:
+    with ProcessPoolExecutor() as executor:
         futures = [executor.submit(extract_objects, arg) for arg in task_args]
         for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
             pass
