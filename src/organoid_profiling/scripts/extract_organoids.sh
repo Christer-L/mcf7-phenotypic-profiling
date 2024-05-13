@@ -12,4 +12,4 @@ cd ..
 cd ..
 
 
-conda run -n cells2circles python -m src/organoid_profiling/extract_organoids.py
+conda run -n cells2circles python -m src.organoid_profiling.extract_organoids
