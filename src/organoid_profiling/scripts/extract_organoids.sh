@@ -8,5 +8,6 @@
 #SBATCH --mem=80G
 
 cd ..
+cd ..
 
-conda run -n cells2circles python -m extract_organoids.py
+conda run -n cells2circles python organoid_profiling/extract_organoids.py
