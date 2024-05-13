@@ -157,8 +157,8 @@ def main():
         condition = path_parts[-2]
         slice_idx = path_parts[-1][:-4]
 
-        img_save_dir = os.path.join(args.out_dir, "images", condition, slice_idx + ".tif")
-        seg_save_dir = os.path.join(args.out_dir, "segmentations", condition, slice_idx + ".tif")
+        img_save_dir = os.path.join(args.out_dir, "images", condition, slice_idx)
+        seg_save_dir = os.path.join(args.out_dir, "segmentations", condition, slice_idx)
 
         img_path = os.path.join(args.image_dir, condition + ".tif")
         # -------------------------------------
