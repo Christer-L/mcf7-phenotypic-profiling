@@ -26,9 +26,10 @@ def extract_features(args):
     mask_stack = tifffile.imread(seg_path)
     n_imgs = img_stack.shape[0]
 
-    for i_z in tqdm(range(n_imgs)):
+    for i_z in range(n_imgs):
         img = img_stack[i_z]
         mask = mask_stack[i_z]
+        print(mask.shape)
 
         img_itk, mask_itk = numpy_to_itk([img, mask])
 
@@ -40,7 +41,6 @@ def extract_features(args):
         ]
         entry = [int(i_z)] + values
         rows.append(entry)
-        print("OK")
 
     if columns is None:
         columns = ["object_id"] + ["Pyradiomics_{}".format(k) for k in output if not k.startswith("diagnostics")]
