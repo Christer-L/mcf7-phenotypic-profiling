@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #SBATCH -o slurm.%x.%N.%j.out  # STDOUT file with the Job name, the Node name and the Job ID
 #SBATCH -e slurm.%x.%N.%j.err  # STDERR file with the Job name, the Node name and the Job ID
 #SBATCH --job-name=feature_extraction
