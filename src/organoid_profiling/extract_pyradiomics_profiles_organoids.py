@@ -6,7 +6,7 @@ from glob import glob
 from tqdm import tqdm
 import os
 import pandas as pd
-
+from radiomics import featureextractor
 from concurrent.futures import ProcessPoolExecutor
 import concurrent
 
