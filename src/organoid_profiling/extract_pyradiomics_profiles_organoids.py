@@ -32,7 +32,7 @@ def extract_features(args):
 
         img_itk, mask_itk = numpy_to_itk([img, mask])
 
-        output = extractor.execute(img_itk, mask_itk, label=int(255))
+        output = extractor.execute(img_itk, mask_itk, label=int(1))
         values = [
             float(str(output[k]))
             for k in output
