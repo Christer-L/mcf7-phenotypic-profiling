@@ -65,7 +65,8 @@ def main():
                         default="/mnt/cbib/christers_data/organoids/Ihssane_Brightfield_06052024/structured/"
                                 "extracted_objects")
     parser.add_argument("--out_dir", type=str, help="output directory for profiles",
-                        nargs='?', default="/mnt/cbib/christers_data/mcf7/structured/profiles/pyradiomics")
+                        nargs='?', default="/mnt/cbib/christers_data/organoids/Ihssane_Brightfield_06052024/structured/"
+                                           "profiles/pyradiomics")
 
     # Parse arguments
     args = parser.parse_args()
