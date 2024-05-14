@@ -29,9 +29,9 @@ def extract_features(args):
     for i_z in range(n_imgs):
         img = img_stack[i_z]
         mask = mask_stack[i_z]
-        print(mask.shape)
 
         img_itk, mask_itk = numpy_to_itk([img, mask])
+        print("OK")
 
         output = extractor.execute(img_itk, mask_itk, label=int(255))
         values = [
