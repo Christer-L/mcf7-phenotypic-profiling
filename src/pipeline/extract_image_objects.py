@@ -195,7 +195,7 @@ def rotate_centered_object(image: np.ndarray, mask: np.ndarray) -> Tuple[np.ndar
     # Note: Quality of image after rotation is dependent on order and prefilter args
     # TODO: Test different values for order and prefiltering
     rotated_image = rotate(image, angle, reshape=False, order=5, mode='constant', cval=0, prefilter=False)
-    rotated_mask = rotate(mask, angle, reshape=False, order=5, mode='constant', cval=0, prefilter=False)
+    rotated_mask = rotate(mask, angle, reshape=False, order=0, mode='constant', cval=0, prefilter=False)
 
     # Filter out surrounding noise or artefacts from rotation
     rotated_image = rotated_image * rotated_mask
