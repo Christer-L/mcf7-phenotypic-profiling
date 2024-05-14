@@ -97,6 +97,10 @@ def extract_objects(args, dim=820) -> None:
             mask_to_save = (roi_mask * 255).astype(np.uint8)
             rot_mask_to_save = (mask_filtered_rotated * 255).astype(np.uint8)
 
+            if (object_touches_img_border(255, mask_to_save) or
+                    object_touches_img_border(255, rot_mask_to_save)):
+                continue
+
             # Append the processed objects and masks to their respective lists
             extracted_objects.append(obj_to_save)
             aligned_objects.append(rot_obj_to_save)
