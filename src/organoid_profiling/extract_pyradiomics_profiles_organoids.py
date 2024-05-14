@@ -57,7 +57,7 @@ def extract_features(args):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="DINO profile extraction")
+    parser = argparse.ArgumentParser(description="Pyradiomics profile extraction")
 
     # Add arguments
     parser.add_argument("--extracted_objects_dir", type=str, help="extracted_objects dir",
@@ -75,7 +75,7 @@ def main():
 
     # Get all paths
     paths = glob(os.path.join(args.extracted_objects_dir, "images", "*", "*"))
-    dirs = [path.split("/")[-2:] for path in paths]
+    dirs = ["/".join(path.split("/")[-2:]) for path in paths]
 
     task_args = []
     for dir_path in dirs:
