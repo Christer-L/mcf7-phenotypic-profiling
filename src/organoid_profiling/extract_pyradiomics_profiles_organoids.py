@@ -31,7 +31,6 @@ def extract_features(args):
         mask = mask_stack[i_z]
 
         img_itk, mask_itk = numpy_to_itk([img, mask])
-        print("OK")
 
         output = extractor.execute(img_itk, mask_itk, label=int(255))
         values = [
@@ -39,6 +38,7 @@ def extract_features(args):
             for k in output
             if not k.startswith("diagnostics")
         ]
+        print(values)
         entry = [int(i_z)] + values
         rows.append(entry)
 
