@@ -26,7 +26,7 @@ def extract_features(args):
     mask_stack = tifffile.imread(seg_path)
     n_imgs = img_stack.shape[0]
 
-    for i_z in range(n_imgs):
+    for i_z in tqdm(range(n_imgs)):
         img = img_stack[i_z]
         mask = mask_stack[i_z]
 
