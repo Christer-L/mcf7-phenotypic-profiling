@@ -5,7 +5,7 @@
 #SBATCH --job-name=feature_extraction
 #SBATCH --time=10:00:00
 #SBATCH --ntasks=1
-#SBATCH --mem=48G
+#SBATCH --mem=14G
 
 cd ..
 cd ..
