@@ -40,6 +40,7 @@ def extract_features(args):
         ]
         entry = [int(i_z)] + values
         rows.append(entry)
+        print("OK")
 
     if columns is None:
         columns = ["object_id"] + ["Pyradiomics_{}".format(k) for k in output if not k.startswith("diagnostics")]
