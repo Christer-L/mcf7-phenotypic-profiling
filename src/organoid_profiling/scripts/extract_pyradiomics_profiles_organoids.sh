@@ -5,12 +5,10 @@
 #SBATCH --job-name=feature_extraction
 #SBATCH --time=10:00:00
 #SBATCH --ntasks=1
-#SBATCH --mem=32G
+#SBATCH --mem=48G
 
 cd ..
 cd ..
 cd ..
-
-
 
 conda run -n pyradiomics python -m src.organoid_profiling.extract_pyradiomics_profiles_organoids
