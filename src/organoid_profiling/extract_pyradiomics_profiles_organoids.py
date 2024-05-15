@@ -79,10 +79,11 @@ def main():
     dirs = ["/".join(path.split("/")[-2:]) for path in paths]
 
     task_args = []
-    for dir_path in dirs:
-        task_args.append((dir_path, extractor, args.out_dir, args.extracted_objects_dir))
+    # for dir_path in dirs:
+    #     task_args.append((dir_path, extractor, args.out_dir, args.extracted_objects_dir))
+    task_args.append(("filtered_ctrl/47", extractor, args.out_dir, args.extracted_objects_dir))
 
-    with ProcessPoolExecutor(max_workers=1) as executor:
+    with ProcessPoolExecutor() as executor:
         futures = [executor.submit(extract_features, arg) for arg in task_args]
         for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
             pass
