@@ -72,7 +72,7 @@ def main():
     # Parse arguments
     args = parser.parse_args()
 
-    extractor = featureextractor.RadiomicsFeatureExtractor("pipeline/config/pyradiomics2D.yaml")
+    extractor = featureextractor.RadiomicsFeatureExtractor("src/pipeline/config/pyradiomics2D.yaml")
 
     # Get all paths
     paths = glob(os.path.join(args.extracted_objects_dir, "images", "*", "*"))
