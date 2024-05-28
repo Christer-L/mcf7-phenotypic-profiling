@@ -54,8 +54,12 @@ def segment(paths, kernel_size, data_dir, out_dir):
         # In OpenCV, if you set sigma to 0, it calculates an appropriate sigma based on the kernel size,
         # making the process somewhat adaptive.
         kernel_size = int(kernel_size)
-        blurred_image = cv2.GaussianBlur(img, (kernel_size, kernel_size), 0)
-        labels, _ = model.predict_instances(normalize(blurred_image))
+
+        if kernel_size > 0:
+            blurred_image = cv2.GaussianBlur(img, (kernel_size, kernel_size), 0)
+            labels, _ = model.predict_instances(normalize(blurred_image))
+        else:
+            labels, _ = model.predict_instances(normalize(img))
 
         # Save segmentation
         labels_16bit = map_to_16bit(labels).astype(np.uint16)
@@ -74,7 +78,6 @@ def main():
                         default="/mnt/cbib/christers_data/mcf7/structured/metadata/drug_selection/paths/batch_0.pkl")
     parser.add_argument("--gpu_id", type=str, help="GPU ID")
     parser.add_argument("--kernel_size", type=str, help="Gaussian Kernel Size")
-
     parser.add_argument("--out_dir", type=str, help="Segmentation directory",
                         nargs='?', default="/mnt/cbib/christers_data/mcf7/segmentations")
 
@@ -87,7 +90,7 @@ def main():
     os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
 
     # Open image paths from the input pickle file
-    with open(args.path_list, 'rb') as f:
+    with open(args.path_list_file, 'rb') as f:
         paths = pickle.load(f)
 
     segment(paths, args.kernel_size, args.data_path, args.out_dir)
