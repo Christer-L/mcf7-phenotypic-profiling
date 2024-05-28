@@ -76,6 +76,8 @@ def main():
     parser.add_argument("--path_list_file", type=str, help="Path to the pickle file with all DAPI paths",
                         nargs='?',
                         default="/mnt/cbib/christers_data/mcf7/structured/metadata/drug_selection/paths/batch_0.pkl")
+    parser.add_argument("--data_dir", type=str, help="Image directory", nargs='?',
+                        default="/mnt/cbib/christers_data/mcf7/raw_extracted")
     parser.add_argument("--gpu_id", type=str, help="GPU ID")
     parser.add_argument("--kernel_size", type=str, help="Gaussian Kernel Size")
     parser.add_argument("--out_dir", type=str, help="Segmentation directory",
