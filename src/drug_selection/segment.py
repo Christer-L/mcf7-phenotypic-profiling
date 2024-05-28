@@ -95,7 +95,7 @@ def main():
     with open(args.path_list_file, 'rb') as f:
         paths = pickle.load(f)
 
-    segment(paths, args.kernel_size, args.data_path, args.out_dir)
+    segment(paths, args.kernel_size, args.data_dir, args.out_dir)
 
 
 if __name__ == '__main__':
