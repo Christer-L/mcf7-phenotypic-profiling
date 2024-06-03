@@ -7,4 +7,4 @@
 #SBATCH --ntasks=12
 #SBATCH --mem=96G
 
-conda run -n pyradiomics python ../src/extract_pyradiomics_profiles.py
+conda run -n pyradiomics python ../src/pipeline/extract_pyradiomics_profiles.py
