@@ -5,6 +5,6 @@
 #SBATCH --job-name=feature_extraction
 #SBATCH --time=10:00:00
 #SBATCH --ntasks=12
-#SBATCH --mem=96G
+#SBATCH --mem=144G
 
 conda run -n pyradiomics python ../src/pipeline/extract_pyradiomics_profiles.py
