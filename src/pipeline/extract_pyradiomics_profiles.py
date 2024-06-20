@@ -67,6 +67,10 @@ def extract_features(args):
         # Save the DataFrame to a CSV file
         profile_df.to_csv(save_filepath)
     except Exception:
+        if img_path is not None:
+            print(img_path)
+        else:
+            print("<Undefined img_path>")
         traceback.print_exc()
 
 
