@@ -8,6 +8,7 @@ import tifffile
 import pandas as pd
 import numpy as np
 import SimpleITK as sitk
+import traceback
 
 
 from concurrent.futures import ProcessPoolExecutor
@@ -22,48 +23,51 @@ def numpy_to_itk(images):
 
 
 def extract_features(args):
-    dir_path, extractor, gaussian, out_dir, extracted_cells_dir = args
-    path_parts = os.path.normpath(dir_path).split(os.sep)
-    rows = []
-    columns = None
+    try:
+        dir_path, extractor, gaussian, out_dir, extracted_cells_dir = args
+        path_parts = os.path.normpath(dir_path).split(os.sep)
+        rows = []
+        columns = None
 
-    img_path = os.path.join(extracted_cells_dir, "images", "gaussian_{}".format(gaussian),
-                            dir_path, "original_normalized.tif")
-    seg_path = os.path.join(extracted_cells_dir, "segmentations", "gaussian_{}".format(gaussian),
-                            dir_path, "original.tif")
+        img_path = os.path.join(extracted_cells_dir, "images", "gaussian_{}".format(gaussian),
+                                dir_path, "original_normalized.tif")
+        seg_path = os.path.join(extracted_cells_dir, "segmentations", "gaussian_{}".format(gaussian),
+                                dir_path, "original.tif")
 
-    img_stack = tifffile.imread(img_path)
-    mask_stack = tifffile.imread(seg_path)
-    n_imgs = img_stack.shape[0]
+        img_stack = tifffile.imread(img_path)
+        mask_stack = tifffile.imread(seg_path)
+        n_imgs = img_stack.shape[0]
 
-    for i_z in range(n_imgs):
-        img = img_stack[i_z]
-        mask = mask_stack[i_z]
+        for i_z in range(n_imgs):
+            img = img_stack[i_z]
+            mask = mask_stack[i_z]
 
-        img_itk, mask_itk = numpy_to_itk([img, mask])
+            img_itk, mask_itk = numpy_to_itk([img, mask])
 
-        output = extractor.execute(img_itk, mask_itk, label=int(255))
-        values = [
-            float(str(output[k]))
-            for k in output
-            if not k.startswith("diagnostics")
-        ]
-        entry = [int(i_z)] + values
-        rows.append(entry)
+            output = extractor.execute(img_itk, mask_itk, label=int(255))
+            values = [
+                float(str(output[k]))
+                for k in output
+                if not k.startswith("diagnostics")
+            ]
+            entry = [int(i_z)] + values
+            rows.append(entry)
 
-    if columns is None:
-        columns = ["object_id"] + ["Pyradiomics_{}".format(k) for k in output if not k.startswith("diagnostics")]
+        if columns is None:
+            columns = ["object_id"] + ["Pyradiomics_{}".format(k) for k in output if not k.startswith("diagnostics")]
 
-    # Append the embeddings to a DataFrame
-    profile_df = pd.DataFrame(rows, columns=columns)
+        # Append the embeddings to a DataFrame
+        profile_df = pd.DataFrame(rows, columns=columns)
 
-    # Construct the path to the output CSV file
-    save_path = os.path.join(out_dir, "gaussian_{}".format(gaussian), path_parts[0])
-    os.makedirs(save_path, exist_ok=True)
-    save_filepath = os.path.join(save_path, "{}.csv".format(path_parts[1]))
+        # Construct the path to the output CSV file
+        save_path = os.path.join(out_dir, "gaussian_{}".format(gaussian), path_parts[0])
+        os.makedirs(save_path, exist_ok=True)
+        save_filepath = os.path.join(save_path, "{}.csv".format(path_parts[1]))
 
-    # Save the DataFrame to a CSV file
-    profile_df.to_csv(save_filepath)
+        # Save the DataFrame to a CSV file
+        profile_df.to_csv(save_filepath)
+    except Exception:
+        traceback.print_exc()
 
 
 def main():
