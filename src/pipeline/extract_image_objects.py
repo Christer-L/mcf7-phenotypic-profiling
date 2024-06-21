@@ -322,8 +322,8 @@ def main():
         task_args.append((img_path, seg_path, img_save_dir, seg_save_dir))
 
         # For demonstration purposes, break after preparing two tasks
-        if len(task_args) == 2:
-            break
+        #if len(task_args) == 2:
+        #    break
 
     filtered_paths = ["/".join(path.split("/")[-3:-1]) for path in glob(os.path.join(args.out_dir,
                                                                                    "images",
