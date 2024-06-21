@@ -7,6 +7,16 @@ import numpy as np
 import pickle
 
 
+def save_in_splits(paths, n_splits, path_save_dir):
+    splits = np.array_split(paths, int(n_splits))  # Split images into n batches
+    # Save filtered metadata table and batches.
+    os.makedirs(path_save_dir, exist_ok=True)
+    for idx_split, split in enumerate(splits):
+        save_path = os.path.join(path_save_dir, "batch_{}.pkl".format(idx_split))
+        with open(save_path, 'wb') as f:
+            pickle.dump(split, f)
+
+
 def filter_compounds(image_metadata_table: DataFrame, compounds) -> DataFrame:
     """
     Get a table from metadata that refers to compounds with defined MoA and their controls from same wellplates.
@@ -67,7 +77,7 @@ def main():
     parser.add_argument("save_path", type=str,
                         help=" Parent directory for formatted metadata",
                         nargs="?",
-                        default="/mnt/cbib/christers_data/mcf7/structured/metadata/drug_selection")
+                        default="/mnt/cbib/christers_data/mcf7/structured/metadata/drug_selection/paths")
 
     parser.add_argument("n_splits", type=int,
                         help="Number of splits of for downstream processing " +
@@ -103,15 +113,7 @@ def main():
     print("Total number of MoAs: {}".format(len(moas)))
 
     paths = format_paths(filtered_table)    # Get image paths (each corresponds to a single row in the table)
-    splits = np.array_split(paths, int(args.n_splits))  # Split images into n batches
-
-    # Save filtered metadata table and batches.
-    path_save_dir = os.path.join(args.save_path, "paths")
-    os.makedirs(path_save_dir, exist_ok=True)
-    for idx_split, split in enumerate(splits):
-        save_path = os.path.join(path_save_dir, "batch_{}.pkl".format(idx_split))
-        with open(save_path, 'wb') as f:
-            pickle.dump(split, f)
+    save_in_splits(paths, args.n_splits, args.save_path)  # Save paths in splits
     filtered_table.to_csv(os.path.join(args.save_path, "filtered_metadata.csv"))
 
 

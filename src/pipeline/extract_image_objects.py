@@ -9,9 +9,10 @@ import tifffile
 import numpy as np
 from scipy.ndimage import rotate
 import concurrent
+from src.drug_selection.format_metadata import save_in_splits
 
 
-def extract_objects(args, dim=128, normalize_image=False) -> None:
+def extract_objects(args, dim=128, normalize_image=False, min_n_labels=5) -> None:
     """
     Extracts objects from an image using its corresponding segmentation mask, applies rotation
     and saves them as TIFF stacks.
@@ -51,6 +52,12 @@ def extract_objects(args, dim=128, normalize_image=False) -> None:
 
         # Count each label in the mask
         unique_labels = np.unique(segmentations)
+
+        # Confirm that there are at least min_n_labels objects in the image without
+        # checking if the object touches the border
+        if len(unique_labels) < min_n_labels:
+            print(f"Too few objects in image: {img_path}")
+            return
 
         # Create stacks for saving image objects as tif images
         extracted_masks = []
@@ -98,6 +105,11 @@ def extract_objects(args, dim=128, normalize_image=False) -> None:
             normalized_aligned_objects.append(norm_rot_obj_to_save)
             extracted_masks.append(mask_to_save)
             aligned_masks.append(rot_mask_to_save)
+
+        # Confirm that there are at least min_n_labels objects
+        if len(extracted_objects) < min_n_labels:
+            print(f"Too few objects in image: {img_path}")
+            return
 
         # Save the object stacks and their masks
         tifffile.imwrite(os.path.join(img_out_dir, "original.tif"), np.array(extracted_objects))
@@ -193,7 +205,6 @@ def rotate_centered_object(image: np.ndarray, mask: np.ndarray) -> Tuple[np.ndar
 
     # Calculate the rotation needed to align the major axis vertically.
     # Note: Quality of image after rotation is dependent on order and prefilter args
-    # TODO: Test different values for order and prefiltering
     rotated_image = rotate(image, angle, reshape=False, order=5, mode='constant', cval=0, prefilter=False)
     rotated_mask = rotate(mask, angle, reshape=False, order=0, mode='constant', cval=0, prefilter=False)
 
@@ -276,6 +287,14 @@ def main():
                         nargs='?',
                         default="/mnt/cbib/christers_data/mcf7/structured/extracted_cells")
 
+    parser.add_argument("--metadata_dir", type=str, help="output directory",
+                        nargs='?',
+                        default="/mnt/cbib/christers_data/mcf7/structured/metadata/drug_selection/filtered_paths")
+
+    parser.add_argument("--n_splits", type=str, help="output directory",
+                        nargs='?',
+                        default="1")
+
     # Parse arguments
     args = parser.parse_args()
 
@@ -283,7 +302,7 @@ def main():
     segmentation_paths = os.path.join(args.segmentations_dir, "gaussian_{}".format(args.gaussian), "*", "*")
 
     # Create directories and append task arguments for executor
-    for seg_path in tqdm(glob(segmentation_paths), total=len(segmentation_paths)):
+    for seg_path in glob(segmentation_paths):
 
         # --- Create and record directories ---
         path_parts = os.path.normpath(seg_path).split(os.sep)
@@ -302,8 +321,16 @@ def main():
 
         task_args.append((img_path, seg_path, img_save_dir, seg_save_dir))
 
-        # if len(task_args) == 2:
-        #     break
+        # For demonstration purposes, break after preparing two tasks
+        if len(task_args) == 2:
+            break
+
+    filtered_paths = ["/".join(path.split("/")[-3:-1]) for path in glob(os.path.join(args.out_dir,
+                                                                                   "images",
+                                                                                   "gaussian_{}".format(args.gaussian),
+                                                                                   "*",
+                                                                                   "*", "original.tif"))]
+    save_in_splits(filtered_paths, int(args.n_splits), args.metadata_dir)
 
     with ProcessPoolExecutor(max_workers=1) as executor:
         futures = [executor.submit(extract_objects, arg) for arg in task_args]
