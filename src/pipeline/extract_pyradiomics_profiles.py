@@ -23,17 +23,16 @@ def numpy_to_itk(images):
 
 
 def extract_features(args):
+    dir_path, extractor, gaussian, out_dir, extracted_cells_dir = args
+    path_parts = os.path.normpath(dir_path).split(os.sep)
+    rows = []
+    columns = None
+
+    img_path = os.path.join(extracted_cells_dir, "images", "gaussian_{}".format(gaussian),
+                            dir_path, "original_normalized.tif")
+    seg_path = os.path.join(extracted_cells_dir, "segmentations", "gaussian_{}".format(gaussian),
+                            dir_path, "original.tif")
     try:
-        dir_path, extractor, gaussian, out_dir, extracted_cells_dir = args
-        path_parts = os.path.normpath(dir_path).split(os.sep)
-        rows = []
-        columns = None
-
-        img_path = os.path.join(extracted_cells_dir, "images", "gaussian_{}".format(gaussian),
-                                dir_path, "original_normalized.tif")
-        seg_path = os.path.join(extracted_cells_dir, "segmentations", "gaussian_{}".format(gaussian),
-                                dir_path, "original.tif")
-
         img_stack = tifffile.imread(img_path)
         mask_stack = tifffile.imread(seg_path)
         n_imgs = img_stack.shape[0]
@@ -67,10 +66,8 @@ def extract_features(args):
         # Save the DataFrame to a CSV file
         profile_df.to_csv(save_filepath)
     except Exception:
-        if img_path is not None:
-            print(img_path)
-        else:
-            print("<Undefined img_path>")
+        print(f"Error occurred while processing image: {img_path}")
+        print(f"Error occurred while processing segmentation: {seg_path}")
         traceback.print_exc()
 
 
