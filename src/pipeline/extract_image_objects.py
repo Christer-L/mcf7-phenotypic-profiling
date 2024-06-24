@@ -9,7 +9,7 @@ import tifffile
 import numpy as np
 from scipy.ndimage import rotate
 import concurrent
-from ..drug_selection.format_metadata import save_in_splits
+from src.drug_selection.format_metadata import save_in_splits
 
 
 def extract_objects(args, dim=128, normalize_image=False, min_n_labels=5) -> None:

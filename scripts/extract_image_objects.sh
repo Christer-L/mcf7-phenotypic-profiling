@@ -7,6 +7,4 @@
 #SBATCH --ntasks=30
 #SBATCH --mem=196G
 
-cd ..
-
-conda run -n cells2circles python src/pipeline/extract_image_objects.py
+conda run -n cells2circles python -m ../src/pipeline/extract_image_objects
