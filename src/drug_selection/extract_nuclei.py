@@ -4,7 +4,7 @@ from glob import glob
 from concurrent.futures import ProcessPoolExecutor
 import argparse
 import concurrent
-from format_metadata import save_in_splits
+from src.drug_selection.format_metadata import save_in_splits
 from src.pipeline.extract_image_objects import extract_objects
 
 
