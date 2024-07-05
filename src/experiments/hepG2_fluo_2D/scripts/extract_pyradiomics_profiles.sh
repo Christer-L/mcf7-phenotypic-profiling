@@ -11,7 +11,8 @@ cd ..
 cd ..
 cd ..
 cd ..
-cd ..
+
+pwd
 
 conda run -n pyradiomics python -m src.experiments.hepG2_fluo_2D.5_extract_pyradiomics_profiles
 
