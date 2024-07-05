@@ -23,7 +23,7 @@ def main():
     parser.add_argument("--out_dir", type=str, help="output directory for profiles",
                         nargs='?', default="/mnt/cbib/christers_data/HepG2/2D_fluo/profiles/pyradiomics")
     parser.add_argument("--gaussian", type=str, help="Gaussian kernel sigma used in segmentation",
-                        nargs='?', default="3")
+                        nargs='?', default="0")
 
     # Parse arguments
     args = parser.parse_args()
