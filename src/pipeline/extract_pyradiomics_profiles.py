@@ -24,9 +24,9 @@ def extract_features(args):
     rows = []
     columns = None
 
-    img_path = os.path.join(extracted_cells_dir, "images", "gaussian_{}".format(gaussian),
+    img_path = os.path.join(extracted_cells_dir, "gaussian_{}".format(gaussian), "images",
                             dir_path, "original_normalized.tif")
-    seg_path = os.path.join(extracted_cells_dir, "segmentations", "gaussian_{}".format(gaussian),
+    seg_path = os.path.join(extracted_cells_dir, "gaussian_{}".format(gaussian), "segmentations",
                             dir_path, "original.tif")
     try:
         img_stack = tifffile.imread(img_path)
