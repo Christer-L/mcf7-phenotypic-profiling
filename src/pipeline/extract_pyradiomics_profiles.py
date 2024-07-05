@@ -8,7 +8,7 @@ import traceback
 
 
 def initialize_feature_extractor():
-    return featureextractor.RadiomicsFeatureExtractor("../src/pipeline/config/pyradiomics2D.yaml")
+    return featureextractor.RadiomicsFeatureExtractor("src/pipeline/config/pyradiomics2D.yaml")
 
 
 def numpy_to_itk(images):
