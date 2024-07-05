@@ -55,9 +55,9 @@ def extract_features(args):
         profile_df = pd.DataFrame(rows, columns=columns)
 
         # Construct the path to the output CSV file
-        save_path = os.path.join(out_dir, "gaussian_{}".format(gaussian), path_parts[0])
+        save_path = os.path.join(out_dir, "gaussian_{}".format(gaussian), path_parts[:-1])
         os.makedirs(save_path, exist_ok=True)
-        save_filepath = os.path.join(save_path, "{}.csv".format(path_parts[1]))
+        save_filepath = os.path.join(save_path, "{}.csv".format(path_parts[-1]))
 
         # Save the DataFrame to a CSV file
         profile_df.to_csv(save_filepath)
