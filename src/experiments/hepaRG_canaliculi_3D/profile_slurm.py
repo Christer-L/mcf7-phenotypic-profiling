@@ -106,7 +106,7 @@ def main():
         mask = tifffile.imread(path)
         task_args.append((path, mask, extractor, condition, concentration, args.min_volume, args.out_path))
 
-    with ProcessPoolExecutor(max_workers=16) as executor:
+    with ProcessPoolExecutor(max_workers=8) as executor:
         futures = [executor.submit(extract_features, arg) for arg in task_args]
         for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
             pass
