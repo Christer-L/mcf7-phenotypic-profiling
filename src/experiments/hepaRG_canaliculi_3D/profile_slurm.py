@@ -66,7 +66,7 @@ def extract_features(args):
             if voxel_count < min_vol or mask_id == 0:
                 continue
             if cols is None:
-                features, cols = profile(pseudo_img, extractor, mask_stack=mask, label_id=mask_id)
+                features, cols = profile(pseudo_img, extractor, mask_stack=mask, label_id=mask_id, columns_exist=False)
             else:
                 features, _ = profile(pseudo_img, extractor, mask_stack=mask, label_id=mask_id)
             instance_rows.append(features)
@@ -112,7 +112,7 @@ def main():
         mask = tifffile.imread(path)
         task_args.append((i_path, path, mask, extractor, condition, concentration, args.min_volume, args.out_path))
 
-    with ProcessPoolExecutor(max_workers=8) as executor:
+    with ProcessPoolExecutor(max_workers=16) as executor:
         futures = [executor.submit(extract_features, arg) for arg in task_args]
         for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
             pass
