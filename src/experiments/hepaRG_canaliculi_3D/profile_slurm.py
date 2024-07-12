@@ -101,10 +101,10 @@ def main():
     extractor = initialize_feature_extractor()
 
     task_args = []
-    for path in paths:
+    for i_path, path in enumerate(paths):
         condition, concentration = get_params_from_path(path)
         mask = tifffile.imread(path)
-        task_args.append((path, mask, extractor, condition, concentration, args.min_volume, args.out_path))
+        task_args.append((i_path, path, mask, extractor, condition, concentration, args.min_volume, args.out_path))
 
     with ProcessPoolExecutor(max_workers=8) as executor:
         futures = [executor.submit(extract_features, arg) for arg in task_args]
