@@ -7,7 +7,7 @@ from glob import glob
 import SimpleITK as sitk
 import numpy as np
 from radiomics import featureextractor
-
+from tqdm import tqdm
 
 def initialize_feature_extractor():
     return featureextractor.RadiomicsFeatureExtractor("config/pyradiomics3D.yaml")
@@ -81,7 +81,7 @@ def main():
     extractor = initialize_feature_extractor()
     dfs = []
 
-    for path in paths:
+    for path in tqdm(paths[:5]):
         condition, concentration = get_params_from_path(path)
         mask = tifffile.imread(path)
 
