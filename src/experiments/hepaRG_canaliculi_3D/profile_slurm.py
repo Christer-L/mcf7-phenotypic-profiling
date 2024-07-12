@@ -60,7 +60,7 @@ def extract_features(args):
     instance_rows = []
 
     for mask_id, voxel_count in zip(*np.unique(mask, return_counts=True)):
-        if voxel_count < args.min_volume or mask_id == 0:
+        if voxel_count < min_vol or mask_id == 0:
             continue
         if cols is None:
             features, cols = profile(pseudo_img, extractor, mask_stack=mask, label_id=mask_id)
@@ -72,7 +72,7 @@ def extract_features(args):
     instance_df["condition"] = condition
     instance_df["concentration"] = concentration
     instance_df["path"] = path
-    instance_df.to_csv(os.path.join(args.out_path, "features_{}.csv".format(i_path)), index=False)
+    instance_df.to_csv(os.path.join(out_path, "features_{}.csv".format(i_path)), index=False)
 
 
 def main():
@@ -93,7 +93,7 @@ def main():
     parser.add_argument("min_volume", type=int,
                         help="Data directory containing all files",
                         nargs="?",
-                        default=50)
+                        default=300)
 
     # Parse arguments
     args = parser.parse_args()
@@ -106,7 +106,7 @@ def main():
         mask = tifffile.imread(path)
         task_args.append((path, mask, extractor, condition, concentration, args.min_volume, args.out_path))
 
-    with ProcessPoolExecutor() as executor:
+    with ProcessPoolExecutor(max_workers=16) as executor:
         futures = [executor.submit(extract_features, arg) for arg in task_args]
         for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
             pass

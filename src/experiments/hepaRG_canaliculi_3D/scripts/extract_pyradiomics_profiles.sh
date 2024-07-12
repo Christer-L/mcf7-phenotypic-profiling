@@ -4,8 +4,8 @@
 #SBATCH -e slurm.%x.%N.%j.err  # STDERR file with the Job name, the Node name and the Job ID
 #SBATCH --job-name=feature_extraction
 #SBATCH --time=10:00:00
-#SBATCH --ntasks=4
-#SBATCH --mem=100G
+#SBATCH --ntasks=32
+#SBATCH --mem=180G
 
 cd ..
 cd ..
