@@ -99,7 +99,7 @@ def main():
     parser.add_argument("min_volume", type=int,
                         help="Data directory containing all files",
                         nargs="?",
-                        default=300)
+                        default=50)
 
     # Parse arguments
     args = parser.parse_args()
