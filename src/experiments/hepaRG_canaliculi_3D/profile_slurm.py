@@ -60,6 +60,7 @@ def extract_features(args):
         i_path, path, mask, extractor, condition, concentration, min_vol, out_path = args
         pseudo_img = np.zeros_like(mask)
         instance_rows = []
+        cols = None
 
         for mask_id, voxel_count in zip(*np.unique(mask, return_counts=True)):
             if voxel_count < min_vol or mask_id == 0:
