@@ -8,6 +8,7 @@ import SimpleITK as sitk
 import numpy as np
 from radiomics import featureextractor
 from tqdm import tqdm
+import traceback
 
 from concurrent.futures import ProcessPoolExecutor
 import concurrent
@@ -55,24 +56,28 @@ def get_params_from_path(path):
 
 
 def extract_features(args):
-    i_path, path, mask, extractor, condition, concentration, min_vol, out_path = args
-    pseudo_img = np.zeros_like(mask)
-    instance_rows = []
+    try:
+        i_path, path, mask, extractor, condition, concentration, min_vol, out_path = args
+        pseudo_img = np.zeros_like(mask)
+        instance_rows = []
 
-    for mask_id, voxel_count in zip(*np.unique(mask, return_counts=True)):
-        if voxel_count < min_vol or mask_id == 0:
-            continue
-        if cols is None:
-            features, cols = profile(pseudo_img, extractor, mask_stack=mask, label_id=mask_id)
-        else:
-            features, _ = profile(pseudo_img, extractor, mask_stack=mask, label_id=mask_id)
-        instance_rows.append(features)
-    instance_df = pd.DataFrame(instance_rows, columns=cols)
-    print(len(instance_df))
-    instance_df["condition"] = condition
-    instance_df["concentration"] = concentration
-    instance_df["path"] = path
-    instance_df.to_csv(os.path.join(out_path, "features_{}.csv".format(i_path)), index=False)
+        for mask_id, voxel_count in zip(*np.unique(mask, return_counts=True)):
+            if voxel_count < min_vol or mask_id == 0:
+                continue
+            if cols is None:
+                features, cols = profile(pseudo_img, extractor, mask_stack=mask, label_id=mask_id)
+            else:
+                features, _ = profile(pseudo_img, extractor, mask_stack=mask, label_id=mask_id)
+            instance_rows.append(features)
+        instance_df = pd.DataFrame(instance_rows, columns=cols)
+        print(len(instance_df))
+        instance_df["condition"] = condition
+        instance_df["concentration"] = concentration
+        instance_df["path"] = path
+        instance_df.to_csv(os.path.join(out_path, "features_{}.csv".format(i_path)), index=False)
+    except Exception:
+        print(f"Error occurred while processing image: {path}")
+        traceback.print_exc()
 
 
 def main():
