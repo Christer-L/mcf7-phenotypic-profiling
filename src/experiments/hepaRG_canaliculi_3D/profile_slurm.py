@@ -66,8 +66,7 @@ def extract_features(args):
             features, cols = profile(pseudo_img, extractor, mask_stack=mask, label_id=mask_id)
         else:
             features, _ = profile(pseudo_img, extractor, mask_stack=mask, label_id=mask_id)
-
-    instance_rows.append(features)
+        instance_rows.append(features)
     instance_df = pd.DataFrame(instance_rows, columns=cols)
     instance_df["condition"] = condition
     instance_df["concentration"] = concentration
