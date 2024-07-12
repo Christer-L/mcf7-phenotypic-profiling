@@ -14,5 +14,5 @@ cd ..
 
 pwd
 
-conda run -n pyradiomics python -m src.experiments.hepaRG_canaliculi.profile
+conda run -n pyradiomics python -m src.experiments.hepaRG_canaliculi_3D.profile
 
