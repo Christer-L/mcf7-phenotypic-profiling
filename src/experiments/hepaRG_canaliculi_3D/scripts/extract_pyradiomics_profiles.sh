@@ -5,11 +5,14 @@
 #SBATCH --job-name=feature_extraction
 #SBATCH --time=10:00:00
 #SBATCH --ntasks=4
-#SBATCH --mem=144G
+#SBATCH --mem=100G
 
 cd ..
 cd ..
 cd ..
+cd ..
 
-conda run -n pyradiomics python -m src.hepaRG_canaliculi.profile
+pwd
+
+conda run -n pyradiomics python -m src.experiments.hepaRG_canaliculi.profile
 
