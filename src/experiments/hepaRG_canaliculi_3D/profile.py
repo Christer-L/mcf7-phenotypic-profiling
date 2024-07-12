@@ -10,7 +10,7 @@ from radiomics import featureextractor
 from tqdm import tqdm
 
 def initialize_feature_extractor():
-    return featureextractor.RadiomicsFeatureExtractor("config/pyradiomics3D_shape.yaml")
+    return featureextractor.RadiomicsFeatureExtractor("src/pipeline/config/pyradiomics3D_shape.yaml")
 
 
 def profile(extractor, mask_stack, label_id, columns_exist=True):
