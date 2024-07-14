@@ -9,6 +9,7 @@ import numpy as np
 from radiomics import featureextractor
 from tqdm import tqdm
 
+
 def initialize_feature_extractor():
     return featureextractor.RadiomicsFeatureExtractor("src/pipeline/config/pyradiomics3D_shape.yaml")
 
