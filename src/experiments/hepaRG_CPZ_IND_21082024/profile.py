@@ -15,9 +15,12 @@ def initialize_feature_extractor():
 
 
 def profile(extractor, mask_stack, label_id, columns_exist=True):
-    pseudo_img = np.zeros_like(mask_stack)
 
-    img_itk, mask_itk = numpy_to_itk([pseudo_img, mask_stack])
+    # This variable is only needed as an input to the feature extractor.
+    # We are only extracting shape features, so the image itself is not used.
+    empty_img = np.zeros_like(mask_stack)
+
+    img_itk, mask_itk = numpy_to_itk([empty_img, mask_stack])
     output = extractor.execute(img_itk, mask_itk, label=int(label_id))
     values = [
         float(str(output[k]))
