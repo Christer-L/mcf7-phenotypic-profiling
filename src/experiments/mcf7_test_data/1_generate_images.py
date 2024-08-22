@@ -120,9 +120,9 @@ def main():
 
             task_args.append((img_path, seg_path, img_save_dir, seg_save_dir))
 
-            # For demonstration purposes, break after preparing two tasks
-            if len(task_args) > 5:
-                break
+            # For demonstration purposes, break after preparing tasks
+            # if len(task_args) > 5:
+            #     break
 
     with ProcessPoolExecutor(max_workers=1) as executor:
         futures = [executor.submit(extract_objects, arg, dim=max_dim + 2, min_n_labels=2) for arg in task_args]
