@@ -161,3 +161,6 @@ cython_debug/
 
 # Project files
 data/
+
+# Model weights
+src/experiments/*/models/

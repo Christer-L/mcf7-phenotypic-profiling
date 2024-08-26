@@ -141,15 +141,15 @@ def main():
 
     task_args = []
 
-    segmentation_paths = os.path.join(args.segmentations_dir, "*", "Fixed", "*", "*.TIF")
+    segmentation_paths = glob(os.path.join(segmentations_dir, "*", "Fixed", "*", "*.TIF"))
 
     # Create directories and append task arguments for executor
-    for seg_path in tqdm(glob(segmentation_paths), total=len(segmentation_paths)):
+    for seg_path in tqdm(segmentation_paths, total=len(segmentation_paths)):
         # --- Create and record directories ---
         img_relative_path_parts = seg_path.split(os.sep)[-4:]
         img_path = os.path.join(data_dir, *img_relative_path_parts)
-        img_save_dir = os.path.join(args.out_dir, "images", *img_relative_path_parts)[:-4]
-        seg_save_dir = os.path.join(args.out_dir, "segmentations", *img_relative_path_parts)[:-4]
+        img_save_dir = os.path.join(out_dir, "images", *img_relative_path_parts)[:-4]
+        seg_save_dir = os.path.join(out_dir, "segmentations", *img_relative_path_parts)[:-4]
         task_args.append((img_path, seg_path, img_save_dir, seg_save_dir))
 
     with ProcessPoolExecutor(max_workers=1) as executor:
