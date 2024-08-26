@@ -40,8 +40,8 @@ def extract_objects(args, dim=820) -> None:
     """
 
     img_path, segmentation_path, img_out_dir, seg_out_dir = args
-    try:
 
+    try:
         os.makedirs(img_out_dir, exist_ok=True)
         os.makedirs(seg_out_dir, exist_ok=True)
 
