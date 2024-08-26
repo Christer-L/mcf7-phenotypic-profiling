@@ -11,5 +11,5 @@ cd ../../../..
 
 pwd
 
-conda run -n pyradiomics python -m src.experiments.hepaRG_CPZ_IND_21082024.3_profile_brightfield_pyradiomics
+conda run -n pyradiomics python -m src.experiments.hepaRG_CPZ_IND_21082024.4_profile_brightfield_pyradiomics
 
