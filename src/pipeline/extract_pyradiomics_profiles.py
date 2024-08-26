@@ -24,10 +24,17 @@ def extract_features(args):
     rows = []
     columns = None
 
-    img_path = os.path.join(extracted_cells_dir, "gaussian_{}".format(gaussian), "images",
-                            dir_path, "original_normalized.tif")
-    seg_path = os.path.join(extracted_cells_dir, "gaussian_{}".format(gaussian), "segmentations",
-                            dir_path, "original.tif")
+    if gaussian:
+        img_path = os.path.join(extracted_cells_dir, "gaussian_{}".format(gaussian), "images",
+                                dir_path, "original_normalized.tif")
+        seg_path = os.path.join(extracted_cells_dir, "gaussian_{}".format(gaussian), "segmentations",
+                                dir_path, "original.tif")
+    else:
+        img_path = os.path.join(extracted_cells_dir, "images",
+                                dir_path, "original_normalized.tif")
+        seg_path = os.path.join(extracted_cells_dir, "segmentations",
+                                dir_path, "original.tif")
+
     try:
         img_stack = tifffile.imread(img_path)
         mask_stack = tifffile.imread(seg_path)
