@@ -52,11 +52,12 @@ def extract_features(args):
                 for k in output
                 if not k.startswith("diagnostics")
             ]
-            entry = [int(i_z)] + values
+            entry = [int(i_z), str(img_path)] + values
             rows.append(entry)
 
         if columns is None:
-            columns = ["object_id"] + ["Pyradiomics_{}".format(k) for k in output if not k.startswith("diagnostics")]
+            columns = ["object_id", "path"] + ["Pyradiomics_{}".format(k) for k in output if not k.startswith(
+                'diagnostics')]
 
         # Append the embeddings to a DataFrame
         profile_df = pd.DataFrame(rows, columns=columns)

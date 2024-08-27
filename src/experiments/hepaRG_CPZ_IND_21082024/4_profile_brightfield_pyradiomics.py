@@ -25,7 +25,6 @@ def main():
     data_dir = args.data_dir
     out_dir = args.out_dir
 
-
     extractor = initialize_feature_extractor()
 
     # Get all paths
