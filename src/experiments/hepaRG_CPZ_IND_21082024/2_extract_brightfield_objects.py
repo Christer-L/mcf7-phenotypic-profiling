@@ -56,6 +56,10 @@ def extract_objects(args, dim=820) -> None:
         # Count each label in the mask
         n_slices = segmentations.shape[0]
 
+        if n_slices == 0:
+            print("0 masks for " + img_path)
+            return
+
         # Create stacks for saving image objects as tif images
         extracted_masks = []
         aligned_masks = []
@@ -107,6 +111,10 @@ def extract_objects(args, dim=820) -> None:
             extracted_masks.append(mask_to_save)
             aligned_masks.append(rot_mask_to_save)
 
+        if len(extracted_objects) == 0:
+            print("0 objects for " + img_path)
+            return
+
         # Save the object stacks and their masks
         tifffile.imwrite(os.path.join(img_out_dir, "original.tif"), np.array(extracted_objects))
         tifffile.imwrite(os.path.join(img_out_dir, "rotated.tif"), np.array(aligned_objects))
@@ -152,7 +160,7 @@ def main():
         seg_save_dir = os.path.join(out_dir, "segmentations", *img_relative_path_parts)[:-4]
         task_args.append((img_path, seg_path, img_save_dir, seg_save_dir))
 
-    with ProcessPoolExecutor(max_workers=1) as executor:
+    with ProcessPoolExecutor(max_workers=4) as executor:
         futures = [executor.submit(extract_objects, arg) for arg in task_args]
         for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
             pass

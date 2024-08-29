@@ -5,7 +5,7 @@ import numpy as np
 from scipy.ndimage import rotate
 
 
-def extract_objects(args, dim=128, normalize_image=False, min_n_labels=5) -> None:
+def extract_objects(args, dim=128, normalize_image=False, min_n_labels=1) -> None:
     """
     Extracts objects from an image using its corresponding segmentation mask, applies rotation
     and saves them as TIFF stacks.
@@ -103,6 +103,7 @@ def extract_objects(args, dim=128, normalize_image=False, min_n_labels=5) -> Non
         if len(extracted_objects) < min_n_labels:
             print(f"Too few objects in image: {img_path}")
             return
+
 
         # Save the object stacks and their masks
         tifffile.imwrite(os.path.join(img_out_dir, "original.tif"), np.array(extracted_objects))
