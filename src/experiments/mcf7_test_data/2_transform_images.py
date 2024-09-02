@@ -63,6 +63,9 @@ def main():
         task_args.append((original_img_path, original_seg_path, save_path_original))
         task_args.append((rotated_img_path, rotated_seg_path, save_path_rotated))
 
+        print("added ", original_img_path)
+        traceback.print_exc()
+
     with ProcessPoolExecutor() as executor:
         futures = [executor.submit(process_image, arg) for arg in task_args]
         for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
