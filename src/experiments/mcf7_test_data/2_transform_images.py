@@ -20,6 +20,9 @@ def process_image(args):
         transformed_img = transform_image(img, mask, image_size=179, circle_radius=89)
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
         tifffile.imwrite(out_path, transformed_img)
+
+        print("saved ", img_path, " to ", out_path)
+        traceback.print_exc()
     else:
         print("no ", img_path)
         traceback.print_exc()
