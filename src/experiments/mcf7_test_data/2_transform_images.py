@@ -10,10 +10,15 @@ from concurrent.futures import ProcessPoolExecutor
 from src.pipeline.normalize_object_shape import transform_image
 
 def process_image(args):
-    img, mask, out_path = args
-    transformed_img = transform_image(img, mask, image_size=179, circle_radius=89)
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
-    tifffile.imwrite(out_path, transformed_img)
+    img_path, mask_path, out_path = args
+
+    if os.path.isfile(img_path) and os.path.isfile(mask_path):
+        img = tifffile.imread(img_path)
+        mask = tifffile.imread(mask_path)
+
+        transformed_img = transform_image(img, mask, image_size=179, circle_radius=89)
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
+        tifffile.imwrite(out_path, transformed_img)
 
 def main():
     # Arguments
@@ -49,17 +54,14 @@ def main():
         original_seg_path = os.path.join(data_dir, "segmentations", pattern_template, img_id, "original.tif")
         rotated_seg_path = os.path.join(data_dir, "segmentations", pattern_template, img_id, "rotated.tif")
 
-        img_original = tifffile.imread(original_img_path)
-        mask_original = tifffile.imread(original_seg_path)
-
         img_rotated = tifffile.imread(rotated_img_path)
         mask_rotated = tifffile.imread(rotated_seg_path)
 
         save_path_original = os.path.join(out_dir, pattern_template, img_id, "original.tif")
         save_path_rotated = os.path.join(out_dir, pattern_template, img_id, "rotated.tif")
 
-        task_args.append((img_original, mask_original, save_path_original))
-        task_args.append((img_rotated, mask_rotated, save_path_rotated))
+        task_args.append((original_img_path, original_seg_path, save_path_original))
+        task_args.append((rotated_img_path, rotated_seg_path, save_path_rotated))
 
     with ProcessPoolExecutor() as executor:
         futures = [executor.submit(process_image, arg) for arg in task_args]
