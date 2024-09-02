@@ -23,12 +23,17 @@ def process_image(args):
         img = tifffile.imread(img_path)
         mask = tifffile.imread(mask_path)
 
-        transformed_img = transform_image(img, mask, image_size=179, circle_radius=89)
-        os.makedirs(os.path.dirname(out_path), exist_ok=True)
-        tifffile.imwrite(out_path, transformed_img)
+        try:
+            transformed_img = transform_image(img, mask, image_size=179, circle_radius=89)
+            os.makedirs(os.path.dirname(out_path), exist_ok=True)
+            tifffile.imwrite(out_path, transformed_img)
+        except Exception as e:
+            print("Error:")
+            print(e)
+            traceback.print_exc()
 
-        print("saved ", img_path, " to ", out_path)
-        traceback.print_exc()
+
+
     else:
         print("no ", img_path)
         traceback.print_exc()
