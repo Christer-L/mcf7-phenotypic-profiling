@@ -7,6 +7,7 @@ from tqdm import tqdm
 import concurrent
 from concurrent.futures import ProcessPoolExecutor
 import traceback
+from pathlib import Path
 
 from src.pipeline.normalize_object_shape import transform_image
 
@@ -15,7 +16,7 @@ def process_image(args):
     print("started converting ", img_path, " with out dir: ", out_path)
     traceback.print_exc()
 
-    if os.path.isfile(img_path) and os.path.isfile(mask_path):
+    if Path(img_path).exists() and Path(mask_path).exists():
         print(img_path, " exists")
         traceback.print_exc()
 
