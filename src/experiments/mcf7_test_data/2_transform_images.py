@@ -12,8 +12,13 @@ from src.pipeline.normalize_object_shape import transform_image
 
 def process_image(args):
     img_path, mask_path, out_path = args
+    print("started converting ", img_path, " with out dir: ", out_path)
+    traceback.print_exc()
 
     if os.path.isfile(img_path) and os.path.isfile(mask_path):
+        print(img_path, " exists")
+        traceback.print_exc()
+
         img = tifffile.imread(img_path)
         mask = tifffile.imread(mask_path)
 
