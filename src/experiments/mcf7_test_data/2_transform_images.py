@@ -54,9 +54,6 @@ def main():
         original_seg_path = os.path.join(data_dir, "segmentations", pattern_template, img_id, "original.tif")
         rotated_seg_path = os.path.join(data_dir, "segmentations", pattern_template, img_id, "rotated.tif")
 
-        img_rotated = tifffile.imread(rotated_img_path)
-        mask_rotated = tifffile.imread(rotated_seg_path)
-
         save_path_original = os.path.join(out_dir, pattern_template, img_id, "original.tif")
         save_path_rotated = os.path.join(out_dir, pattern_template, img_id, "rotated.tif")
 
