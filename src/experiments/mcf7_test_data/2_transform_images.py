@@ -8,6 +8,7 @@ import concurrent
 from concurrent.futures import ProcessPoolExecutor
 import traceback
 from pathlib import Path
+import numpy as np
 
 from src.pipeline.normalize_object_shape import transform_image
 
@@ -17,16 +18,19 @@ def process_image(args):
     traceback.print_exc()
 
     if Path(img_path).exists() and Path(mask_path).exists():
-        print(img_path, " exists")
-        traceback.print_exc()
-
         img = tifffile.imread(img_path)
         mask = tifffile.imread(mask_path)
 
         try:
-            transformed_img = transform_image(img, mask, image_size=179, circle_radius=89)
+            transformed_stack = np.zeros_like(img)
+            for slice_idx in range(img.shape[0]):
+                img_slice = img[slice_idx]
+                mask_slice = mask[slice_idx]
+                transformed_img = transform_image(img_slice, mask_slice, image_size=179, circle_radius=89)
+                transformed_stack[slice_idx] = transformed_img
             os.makedirs(os.path.dirname(out_path), exist_ok=True)
-            tifffile.imwrite(out_path, transformed_img)
+            tifffile.imwrite(out_path, transformed_stack)
+
         except Exception as e:
             print("Error:")
             print(e)
