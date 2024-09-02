@@ -27,12 +27,12 @@ def main():
     parser.add_argument("data_dir", type=str,
                         help="Directories with segmentation maps",
                         nargs="?",
-                        default="/mnt/cbib/pnria/profiling_test_data/structured/")
+                        default="/mnt/cbib/pnria/profiling_test_data/structured")
 
     parser.add_argument("out_dir", type=str,
                         help="Output directory",
                         nargs="?",
-                        default="/mnt/cbib/pnria/profiling_test_data/transformed")
+                        default="/mnt/cbib/christers_data/test_mcf7")
 
     # Parse arguments
     args = parser.parse_args()
