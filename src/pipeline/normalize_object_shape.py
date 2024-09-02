@@ -33,7 +33,7 @@ def transform_image(image, mask, image_size=128, circle_radius=50):
     # Initialize registration method
     selx = sitk.ElastixImageFilter()
     selx.SetParameterMap(selx.GetDefaultParameterMap('nonrigid'))
-    selx.LogToConsoleOff()
+    selx.LogToConsoleOn()
 
     # Convert NumPy arrays to SimpleITK images
     movingImage = sitk.GetImageFromArray(mask.astype(np.uint8))
