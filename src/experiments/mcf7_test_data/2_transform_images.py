@@ -1,0 +1,71 @@
+import argparse
+import os
+from glob import glob
+from skimage.data import data_dir
+import tifffile
+from tqdm import tqdm
+import concurrent
+from concurrent.futures import ProcessPoolExecutor
+
+from src.pipeline.normalize_object_shape import transform_image
+
+def process_image(args):
+    img, mask, out_path = args
+    transformed_img = transform_image(img, mask, image_size=179, circle_radius=89)
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    tifffile.imwrite(out_path, transformed_img)
+
+def main():
+    # Arguments
+    parser = argparse.ArgumentParser(description="Format image paths")
+
+    parser.add_argument("data_dir", type=str,
+                        help="Directories with segmentation maps",
+                        nargs="?",
+                        default="/mnt/cbib/pnria/profiling_test_data/structured/")
+
+    parser.add_argument("out_dir", type=str,
+                        help="Output directory",
+                        nargs="?",
+                        default="/mnt/cbib/pnria/profiling_test_data/transformed")
+
+    # Parse arguments
+    args = parser.parse_args()
+    data_dir = args.data_dir
+    out_dir = args.out_dir
+
+    stack_paths = glob(os.path.join(data_dir, "images", "*", "*"))
+
+    task_args = []
+
+    for stack_path in stack_paths:
+        path_parts = stack_path.split(os.sep)
+        img_id = path_parts[-1]
+        pattern_template = path_parts[-2]
+
+        original_img_path = os.path.join(data_dir, "images", pattern_template, img_id, "original.tif")
+        rotated_img_path = os.path.join(data_dir, "images", pattern_template, img_id, "rotated.tif")
+
+        original_seg_path = os.path.join(data_dir, "segmentations", pattern_template, img_id, "original.tif")
+        rotated_seg_path = os.path.join(data_dir, "segmentations", pattern_template, img_id, "rotated.tif")
+
+        img_original = tifffile.imread(original_img_path)
+        mask_original = tifffile.imread(original_seg_path)
+
+        img_rotated = tifffile.imread(rotated_img_path)
+        mask_rotated = tifffile.imread(rotated_seg_path)
+
+        save_path_original = os.path.join(out_dir, pattern_template, img_id, "original.tif")
+        save_path_rotated = os.path.join(out_dir, pattern_template, img_id, "rotated.tif")
+
+        task_args.append((img_original, mask_original, save_path_original))
+        task_args.append((img_rotated, mask_rotated, save_path_rotated))
+
+    with ProcessPoolExecutor() as executor:
+        futures = [executor.submit(process_image, arg) for arg in task_args]
+        # Optional: use tqdm to show progress
+        for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
+            pass
+
+if __name__ == '__main__':
+    main()
