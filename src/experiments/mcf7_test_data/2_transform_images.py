@@ -6,6 +6,7 @@ import tifffile
 from tqdm import tqdm
 import concurrent
 from concurrent.futures import ProcessPoolExecutor
+import traceback
 
 from src.pipeline.normalize_object_shape import transform_image
 
@@ -20,6 +21,7 @@ def process_image(args):
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
         tifffile.imwrite(out_path, transformed_img)
         print(img_path, "saved to", "out_path")
+        traceback.print_exc()
 
 def main():
     # Arguments
@@ -63,7 +65,6 @@ def main():
 
     with ProcessPoolExecutor() as executor:
         futures = [executor.submit(process_image, arg) for arg in task_args]
-        # Optional: use tqdm to show progress
         for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
             pass
 
