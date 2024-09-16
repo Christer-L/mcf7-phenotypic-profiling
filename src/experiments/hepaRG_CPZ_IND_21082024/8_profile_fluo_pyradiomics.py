@@ -70,7 +70,7 @@ def main():
 
     parser.add_argument("--out_dir", type=str, help="Save dir",
                         nargs='?',
-                        default="/mnt/cbib/christers_data/HepaRG/MRP2_profiles")
+                        default="/mnt/cbib/christers_data/HepaRG/nucleus_profiles")
 
     # Parse arguments
     args = parser.parse_args()
