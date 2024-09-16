@@ -85,8 +85,8 @@ def main():
 
     task_args = []
     for i, actin_mask_path in enumerate(actin_mask_paths):
-        relative_path = os.path.relpath(actin_mask_path, actin_mask_dir).split("w4soSPIM-")[0]
-        img_path = os.path.join(img_dir, relative_path + "w3soSPIM-488-Stream.TIF")
+        relative_path = os.path.relpath(actin_mask_path, actin_mask_dir).split("w2soSPIM-")[0]
+        img_path = os.path.join(img_dir, relative_path + "w3soSPIM-405-Stream.TIF")
 
         condition_info = img_path.split(os.sep)[-2]
         condition_parts = condition_info.split("_")
