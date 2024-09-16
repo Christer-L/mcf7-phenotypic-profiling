@@ -19,7 +19,7 @@ def initialize_feature_extractor_3D():
 
 
 def extract_features(args):
-    img_path, mask_path, compound, dose, extractor, save_path, i = args
+    img_path, mask_path, compound, dose, extractor, save_path = args
 
     try:
         rows = []
