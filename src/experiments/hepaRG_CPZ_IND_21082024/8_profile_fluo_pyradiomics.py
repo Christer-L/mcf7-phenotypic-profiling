@@ -56,7 +56,6 @@ def extract_features(args):
         traceback.print_exc()
 
 
-
 def main():
     parser = argparse.ArgumentParser(description="DINO profile extraction")
 
@@ -91,8 +90,8 @@ def main():
 
         condition_info = img_path.split(os.sep)[-2]
         condition_parts = condition_info.split("_")
-        compound = condition_parts[3]
-        dose = condition_parts[4]
+        compound = condition_parts[2]
+        dose = condition_parts[3]
 
         save_path = os.path.join(out_dir, f"df_{i}.csv")
 
