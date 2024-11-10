@@ -78,7 +78,7 @@ def main():
     for img_path in paths:
         seg_path = img_path.replace("original_normalized", "original")
         seg_path = seg_path.replace("/images/", "/masks/")
-        task_args.append((img_path, seg_path, extractor, args.gaussian, out_dir))
+        task_args.append((img_path, seg_path, extractor, out_dir))
 
     with ProcessPoolExecutor() as executor:
         futures = [executor.submit(extract_features, arg) for arg in task_args]
